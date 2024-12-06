@@ -1,5 +1,6 @@
 
 ![image](https://github.com/emi2x31/Sistema_Pasta_Termica/blob/main/reports/figures/bgh.png)
+![image](https://github.com/emi2x31/Sistema_Pasta_Termica/blob/main/reports/figures/pasta_termica.jpg)
 
 Bloque: Desarrollo de Sistemas de IA      Año: 2024
 
