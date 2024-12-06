@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/0c105bf0-4f3e-41ec-aaa2-752b6b957594)
 
 ![image](https://github.com/emi2x31/Sistema_Pasta_Termica/blob/main/reports/figures/bgh.png)
 
