@@ -5,7 +5,8 @@
 
 Bloque: Desarrollo de Sistemas de IA      Año: 2024
 
-Autor: ORTEGA, Emilio
+Autores: Ortega, Emilio Victor, Matias Daniel jerez, Carlos Manuel ghio, Gabriel garcia
+
 
 --------------
 
