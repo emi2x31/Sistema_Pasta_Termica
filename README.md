@@ -27,7 +27,7 @@ Politécnico Malvinas Argentinas. https://politecnico.tdf.gob.ar/
 
 # Objetivo:
 ----------------
-este proyecto tiene como objetivo abordar un desafío crítico en el contexto de una línea de producción electrónica de la fábrica BGH S.A.; de la ciudad de Río Grande, Tierra del Fuego.
+Este proyecto tiene como objetivo abordar un desafío crítico en el contexto de una línea de producción electrónica de la fábrica BGH S.A.; de la ciudad de Río Grande, Tierra del Fuego.
 El desafío radica en garantizar la correcta aplicación y detección de pasta térmica, un componente fundamental en el ensamblaje de dispositivos electrónicos que contribuye a la eficiencia térmica y al funcionamiento óptimo de los equipos fabricados.  
 La detección precisa de la pasta térmica ya sea por ausencia, exceso o distribución incorrecta, es esencial para evitar defectos que puedan comprometer la calidad del producto final y aumentar los costos asociados a reprocesos o fallas en el uso. A pesar de los esfuerzos manuales de inspección, los errores humanos y la subjetividad en la evaluación representan un desafío significativo en la implementación de controles de calidad consistentes.  
 
