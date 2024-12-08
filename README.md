@@ -24,7 +24,7 @@ Politécnico Malvinas Argentinas. https://politecnico.tdf.gob.ar/
 - [Contexto](#Contexto)
 - [Conclusiones](#Conclusiones)
 
-- [Dataset Utilizados](https://github.com/emi2x31/Congelamiento_del_Suelo/tree/main/data/external)
+- [Documento de Proyecto](https://github.com/emi2x31/Sistema_Pasta_Termica/blob/main/docs/Proyecto%20Final%20de%20Pr%C3%A1ctica%20Profesionalizante%20II.docx)
 - [Descripción sobre origen y tipo de datos](./docs/Descripcion%20de%20los%20Datos.md)
 - [Notebook del trabajo final_rutarelativa](./notebooks/Version3_PredecirCongelamientodelSuelo.ipynb)
 - [Notebook del trabajo final_ruta_drive](./notebooks/Version3.1_PredecirCongelamientodelSuelo.ipynb)
