@@ -1,0 +1,5 @@
+{
+    "model_confidence": 0.72,
+    "model_choice": "model/best700.onnx",
+    "model_frames": 4
+}
