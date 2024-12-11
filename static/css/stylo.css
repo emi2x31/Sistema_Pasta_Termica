@@ -1,0 +1,124 @@
+body {
+    background-color: #f7f8fc;
+}
+
+.login-container {
+    height: 100vh;
+}
+
+.login-box {
+    max-width: 900px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-box img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+h2, p, .form-label, a {
+    color: #ffffff;
+}
+
+h2 {
+    font-weight: 600;
+}
+
+.form-group label {
+    font-weight: 500;
+}
+
+.btn-light {
+    background-color: #ffffff;
+    color: #6c63ff;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.btn-light:hover {
+    background-color: #e2e2e2;
+}
+
+.form-check-label, a {
+    font-size: 14px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.navbar {
+    background-color: #343a40;
+}
+
+/* Estilo para los enlaces de la barra de navegación */
+.navbar-brand {
+    color: white;  /* Color de texto por defecto */
+    padding: 10px 15px;
+    text-decoration: none;  /* Eliminar el subrayado */
+    transition: background-color 0.3s ease;  /* Transición suave */
+}
+
+/* Estilo para los enlaces cuando el mouse pasa sobre ellos */
+.navbar-brand:hover {
+    background-color: white;  /* Fondo blanco cuando se pasa el mouse */
+    color: #343a40;  /* Cambiar el color de texto a oscuro */
+}
+
+/* Evitar que el logo se vea afectado por el hover */
+.navbar .navbar-brand:first-child {
+    background-color: transparent;  /* No cambiar el fondo del logo */
+    color: white;  /* Mantener el color blanco del logo */
+    padding: 0;  /* Eliminar el padding extra */
+}
+
+.content {
+    padding: 20px;
+}
+.header-text {
+    color: #17a2b8;
+}
+
+#flash-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 300px; /* Tamaño fijo */
+    z-index: 9999; /* Asegura que esté en la capa superior */
+}
+
+.flash-message {
+    margin-bottom: 10px; /* Separación entre mensajes */
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombras para mejor apariencia */
+    opacity: 1; /* Comienza totalmente visible */
+    transition: opacity 0.5s ease-in-out; /* Transición suave para desaparecer */
+}
+
+.alert-success {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+.alert-danger {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+.alert-info {
+    background-color: #d9edf7;
+    color: #31708f;
+    border: 1px solid #bce8f1;
+}
+
+.alert-warning {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    border: 1px solid #faebcc;
+}
