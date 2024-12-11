@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="header-text">Dashboard de Predicciones</h2>
+    <hr>
+    <div class="row">
+        <!-- Gráfico de Totales Acumulativos por Día -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Totales Acumulativos por Día</h5>
+                    <canvas id="cumulativeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gráfico de Curvas de Evolución (OK vs Precisión del Modelo) -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Acumulado por Categoría</h5>
+                    <canvas id="totalChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <!-- Gráfico de Total Acumulado de Categorías (SP, OK, NC) debajo de los otros -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Evolución de OK y Precisión</h5>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Estadísticas Clave</h5>
+                <ul id="statsList" class="list-group">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts de Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener los datos del servidor
+        fetch('/dashboard_data')
+            .then(response => response.json())
+            .then(data => {
+                // Gráfico de Totales Acumulativos por Día (Histograma)
+                const cumulativeCtx = document.getElementById('cumulativeChart').getContext('2d');
+                new Chart(cumulativeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.dates, // Fechas
+                        datasets: [
+                            {
+                                label: 'SP',
+                                data: data.sp,
+                                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'OK',
+                                data: data.ok,
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'NC',
+                                data: data.nc,
+                                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Totales Acumulativos por Día'
+                            }
+                        },
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Fechas'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Cantidad'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Gráfico de Curvas de Evolución (OK vs Precisión del Modelo)
+// Gráfico de Curvas de Evolución (OK vs Precisión del Modelo)
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+new Chart(lineCtx, {
+    type: 'line',
+    data: {
+        labels: data.dates, // Fechas
+        datasets: [
+            {
+                label: 'OK',
+                data: data.ok,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: true,
+                tension: 0.1,
+                yAxisID: 'y1' // Vinculado al eje izquierdo
+            },
+            {
+                label: 'Precisión del Modelo',
+                data: data.model_confidence,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.1,
+                yAxisID: 'y2' // Vinculado al eje derecho
+            }
+        ]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Evolución de OK vs Precisión del Modelo'
+            }
+        },
+        responsive: true,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Fechas'
+                }
+            },
+            y1: {
+                type: 'linear',
+                position: 'left',
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Cantidad de OK'
+                }
+            },
+            y2: {
+                type: 'linear',
+                position: 'right',
+                beginAtZero: true,
+                min: 0,
+                max: 1, // Escala del 0 al 1 para precisión
+                title: {
+                    display: true,
+                    text: 'Precisión del Modelo'
+                },
+                grid: {
+                    drawOnChartArea: false // No dibujar líneas de cuadrícula del eje derecho
+                }
+            }
+        }
+    }
+});
+
+
+                // Gráfico de Total Acumulado de Categorías (SP, OK, NC)
+                const totalCtx = document.getElementById('totalChart').getContext('2d');
+                new Chart(totalCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['SP', 'OK', 'NC'],
+                        datasets: [{
+                            label: 'Total Acumulado',
+                            data: [
+                                data.total_counts.SP,
+                                data.total_counts.OK,
+                                data.total_counts.NC
+                            ],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(75, 192, 192, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Total Acumulado por Categoría'
+                            }
+                        },
+                        responsive: true
+                    }
+                });
+
+            });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener los datos del servidor
+        fetch('/dashboard_data')
+            .then(response => response.json())
+            .then(data => {
+                const statsList = document.getElementById('statsList');
+                const stats = data.stats;
+
+                // Crear elementos de la lista con las estadísticas
+                statsList.innerHTML = `
+                    <li class="list-group-item"><strong>Total de Predicciones:</strong> ${stats.total_predictions}</li>
+                    <li class="list-group-item"><strong>Total de OK:</strong> ${stats.total_ok}</li>
+                    <li class="list-group-item"><strong>Porcentaje de OK:</strong> ${stats.percentage_ok}%</li>
+                    <li class="list-group-item"><strong>Día con más OK:</strong> ${stats.most_ok_date || 'N/A'}</li>
+                    <li class="list-group-item"><strong>Promedio de confianza:</strong> ${stats.model_confidence_avg}%</li>
+                `;
+            })
+            .catch(error => {
+                console.error('Error al cargar los datos:', error);
+            });
+    });
+
+</script>
+
+{% endblock %}

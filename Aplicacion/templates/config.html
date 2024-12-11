@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 class="header-text">Configuración de la IA</h2>
+
+    <form method="POST" class="mt-4">
+        <!-- Configuración del modelo de confianza -->
+        <div class="form-group mb-4">
+            <label for="model_confidence" class="form-label">Confianza del modelo:</label>
+            <div class="d-flex align-items-center">
+                <input 
+                    type="range" 
+                    class="form-control-range me-3" 
+                    id="model_confidence" 
+                    name="model_confidence" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value="{{ config.get('model_confidence', 0.5) }}" 
+                    onchange="updateConfidenceValue(this.value)" 
+                    style="width: 80%; height: 25px;"
+                />
+                <span id="confidence_value" class="fw-bold">{{ config.get('model_confidence', 0.5) }}</span>
+            </div>
+            <small class="form-text text-muted">
+                Ajusta el nivel mínimo de confianza requerido para que el modelo valide una detección.
+            </small>
+        </div>
+
+        <!-- Configuración de cuadros de procesamiento -->
+        <label for="model_frames" class="form-label">Cuadros de procesamiento:</label>
+        <div class="d-flex align-items-center">
+            <input 
+                type="range" 
+                class="form-control-range me-3" 
+                id="model_frames" 
+                name="model_frames" 
+                min="1" 
+                max="8" 
+                step="1" 
+                value="{{ config.get('model_frames', 6) }}" 
+                onchange="updateFramesValue(this.value)" 
+                style="width: 80%; height: 25px;"
+            />
+            <span id="frames_value" class="fw-bold">{{ config.get('model_frames', 6) }}</span>
+        </div>
+        <small class="form-text text-muted">
+            Ajusta el nivel máximo de saltos de cuadros de procesamiento del video.
+        </small>
+
+        <!-- Selección del modelo ONNX -->
+        <div class="form-group mb-4">
+            <label for="model_choice" class="form-label">Seleccionar modelo ONNX:</label>
+            <select class="form-control" id="model_choice" name="model_choice">
+                <option value="model/best700.onnx" {% if config.get('model_choice') == 'model/best700.onnx' %}selected{% endif %}>
+                    Modelo entrenado con 700 épocas
+                </option>
+                <option value="model/best300.onnx" {% if config.get('model_choice') == 'model/best300.onnx' %}selected{% endif %}>
+                    Modelo entrenado con 300 épocas
+                </option>
+                <option value="model/best100.onnx" {% if config.get('model_choice') == 'model/best100.onnx' %}selected{% endif %}>
+                    Modelo entrenado con 100 épocas
+                </option>
+                <option value="model/best50.onnx" {% if config.get('model_choice') == 'model/best50.onnx' %}selected{% endif %}>
+                    Modelo entrenado con 50 épocas
+                </option>
+            </select>
+            <small class="form-text text-muted">
+                Selecciona el modelo a usar según tus necesidades de precisión y velocidad.
+            </small>
+        </div>
+        <!-- Botón de guardar -->
+        <button type="submit" class="btn btn-primary btn-block">
+            Guardar Configuración
+        </button>
+    </form>
+
+    <br>
+    <br>
+    <!-- Captura de imagenes para -->
+    <div class="form-group mb-4">
+        <div class="d-flex align-items-center">
+            <!-- Botón para abrir el modal de captura desde la cámara -->
+            <!-- Botón con ícono de cámara -->
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#captureModal">
+                <i class="fas fa-camera" style="margin-right: 8px;"></i>
+                Capturar Imagen desde la Cámara
+            </button>
+        </div>
+        <small class="form-text text-muted">
+            Permite la captura de imagenes para futuros entrenamientos del modelo de Inteligencia Artificial.
+        </small>
+    </div>
+
+    <!-- Modal para la captura desde la cámara -->
+    <div class="modal fade" id="captureModal" tabindex="-1" aria-labelledby="captureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="captureModalLabel">Captura de Imagen</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <video id="camera" width="100%" autoplay></video>
+            <div class="mt-3">
+            <button id="capture-positive" class="btn btn-primary">
+                <i class="fa fa-thumbs-up"></i> Capturar Positiva
+            </button>
+            <button id="capture-negative" class="btn btn-warning">
+                <i class="fa fa-thumbs-down"></i> Capturar Negativa
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        // Actualiza el valor visible del deslizador de confianza
+        function updateConfidenceValue(value) {
+            document.getElementById("confidence_value").textContent = parseFloat(value).toFixed(2);
+        }
+    
+        // Actualiza el valor visible del deslizador de cuadros de procesamiento
+        function updateFramesValue(value) {
+            document.getElementById("frames_value").textContent = parseInt(value);
+        }
+        
+        // Acceso a la cámara y capturar imagen
+        const camera = document.getElementById('camera');
+        const capturePositive = document.getElementById('capture-positive');
+        const captureNegative = document.getElementById('capture-negative');
+    
+        // Función para acceder a la cámara con resolución 1280x720
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { exact: 1280 },
+                    height: { exact: 720 }
+                }
+            })
+            .then(stream => {
+                camera.srcObject = stream;
+            })
+            .catch(error => {
+                console.log("Error al acceder a la cámara:", error);
+                alert("No se pudo acceder a la cámara. Verifica los permisos.");
+            });
+        }
+    
+        // Iniciar la cámara cuando se abre el modal
+        $('#captureModal').on('show.bs.modal', function () {
+            startCamera();
+        });
+    
+        // Detener la cámara cuando se cierra el modal
+        $('#captureModal').on('hidden.bs.modal', function () {
+            const stream = camera.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            camera.srcObject = null;
+        });
+    
+        // Función para capturar imágenes a 1280x720
+        function captureImage(type) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+    
+            // Forzar tamaño del canvas
+            canvas.width = 1280;
+            canvas.height = 720;
+    
+            // Dibujar el video en el canvas
+            context.drawImage(camera, 0, 0, canvas.width, canvas.height);
+    
+            // Convertir la imagen a formato PNG
+            canvas.toBlob(function(blob) {
+                const formData = new FormData();
+                formData.append('image', blob, `image_${Date.now()}.png`);
+                formData.append('type', type);
+    
+                // Enviar la imagen al servidor
+                fetch('/capture_image', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }, 'image/png');
+        }
+    
+        // Eventos para capturar imágenes positivas y negativas
+        capturePositive.addEventListener('click', () => captureImage('positive'));
+        captureNegative.addEventListener('click', () => captureImage('negative'));
+    </script>    
+{% endblock %}

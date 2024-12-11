@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="header-text">Historial de Resultados</h2>
+
+<!-- Formulario para filtrar por fecha -->
+<form action="/logs" method="GET" class="mb-4">
+    <div class="form-group">
+        <label for="date">Seleccionar Fecha</label>
+        <input type="date" id="date" name="date" class="form-control" value="{{ request.args.get('date', '') }}">
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+</form>
+
+<!-- Tabla de Logs con DataTables -->
+{% if logs %}
+<table id="logsTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha y hora</th>
+            <th>Resultados</th>
+            <th>Nivel de deteccion</th>
+            <th>Confianza</th>
+            <th>Modelo</th>
+            <th>Frames</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.timestamp }}</td>
+            <td>{{ log.result }}</td>
+            <td>{{ log.confidences }}</td>
+            <td>{{ log.model_confidence }}</td>
+            <td>{{ log.model_choice }}</td>
+            <td>{{ log.model_frames }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No se encontraron registros para la fecha seleccionada.</p>
+{% endif %}
+
+<!-- Modal para mostrar la configuración -->
+<div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="configModalLabel">Detalles de la Configuración</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Archivo del Modelo:</strong> <span id="modelChoice"></span></p>
+                <p><strong>Nivel de Confianza:</strong> <span id="modelConfidence"></span></p>
+                <p><strong>Cuadros de Procesamiento:</strong> <span id="modelFrames"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts para DataTables y Modal -->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    // Inicializar DataTables
+    $(document).ready(function () {
+        $('#logsTable').DataTable({
+            "paging": true,  // Activar paginación
+            "lengthChange": true,  // Opciones de cantidad de filas a mostrar
+            "searching": true,  // Barra de búsqueda
+            "ordering": true,  // Habilitar ordenamiento
+            "info": true,  // Mostrar información de paginación
+            "autoWidth": false,  // Ajustar ancho automático
+            "responsive": true,  // Soporte para diseño responsive
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json"  // Traducción
+            }
+        });
+    });
+</script>
+{% endblock %}

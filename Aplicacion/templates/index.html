@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="header-text">Bienvenido al Sistema de Control de Pasta Termica</h2>
+<h4>Iniciar IA para analizar video</h1>
+<div>
+    <a href="{{ url_for('start_capture') }}" class="btn btn-success">Iniciar Control</a>
+    <a href="{{ url_for('stop_capture') }}" class="btn btn-danger">Finalizar Control</a>
+</div>
+<br>
+<div>
+    <img src="{{ url_for('video_feed') }}" width="80%">
+</div>
+<h4>Conteo de Categorías</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Etiqueta</th>
+            <th>Conteo</th>
+        </tr>
+    </thead>
+    <tbody id="count-table">
+        <tr>
+            <td>OK</td>
+            <td id="count-ok">0</td>
+        </tr>
+        <tr>
+            <td>SP</td>
+            <td id="count-sp">0</td>
+        </tr>
+        <tr>
+            <td>NC</td>
+            <td id="count-nc">0</td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    // Función para actualizar los conteos en la tabla
+    function updateCounts() {
+        fetch('/get_counts')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('count-ok').textContent = data['OK'] || 0;
+                document.getElementById('count-sp').textContent = data['SP'] || 0;
+                document.getElementById('count-nc').textContent = data['NC'] || 0;
+            });
+    }
+
+    // Actualizar los conteos cada segundo
+    setInterval(updateCounts, 1000);
+</script>
+
+
+{% endblock %}
